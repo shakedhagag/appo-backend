@@ -1,3 +1,15 @@
 node_modules
 # Keep environment variables out of version control
 .env
+
+# Prisma
+.prisma/client/
+prisma/dev.db
+
+# dotenv environment variables file
+.env
+.env.test
+
+# Local IDEs
+.vscode/
+.idea/
