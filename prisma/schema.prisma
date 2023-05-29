@@ -10,83 +10,41 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum UserType {
-  CUSTOMER
-  ADMIN
+model Barber {
+  id             String        @id @default(uuid())
+  createdAt      DateTime      @default(now())
+  firstName      String
+  lastName       String
+  email          String        @unique
+  password       String
+  appointments   Appointment[]
+  availability   Availability[]
 }
 
-model User {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-  type      UserType @default(CUSTOMER)
-  firstName String
-  lastName  String
-  email     String   @unique
-  password  String
-
-  appointments    Appointment[]
-  AllAppointments AllAppointments[]
-  Schedule        Schedule[]
+model Client {
+  id             String        @id @default(uuid())
+  createdAt      DateTime      @default(now())
+  name           String
+  email          String        @unique
+  phoneNumber    String
+  appointments   Appointment[]
 }
 
 model Appointment {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  date      DateTime
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
-}
-
-// Define the data model for all Appointments
-model AllAppointments {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-  date      DateTime
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
-
-  // Additional fields for appointment data
-}
-
-// Define the data model for all Users
-model AllUsers {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-  firstName String
-  lastName  String
-  email     String   @unique
-  password  String
-  // Additional fields for user data
-}
-
-model Product {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-  name      String   @db.VarChar(255)
-  price     Float
-  quantity  Int
-  // Additional fields for product data
-}
-
-// Define the data model for the Schedule
-model Schedule {
   id             String        @id @default(uuid())
   createdAt      DateTime      @default(now())
-  day            DateTime
-  timeSlots      TimeSlot[]
-
-  // Relationship with the User
-  barber         User          @relation(fields: [barberId], references: [id])
+  date           DateTime
   barberId       String
+  clientId       String
+  barber         Barber        @relation(fields: [barberId], references: [id])
+  client         Client        @relation(fields: [clientId], references: [id])
 }
 
-// Define the data model for Time Slots
-model TimeSlot {
+model Availability {
   id             String        @id @default(uuid())
-  startTime      DateTime
-  endTime        DateTime
-
-  // Relationship with Schedule
-  schedule       Schedule      @relation(fields: [scheduleId], references: [id])
-  scheduleId     String
+  createdAt      DateTime      @default(now())
+  startDate      DateTime
+  endDate        DateTime
+  barberId       String
+  barber         Barber        @relation(fields: [barberId], references: [id])
 }
