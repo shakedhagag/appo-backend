@@ -1,30 +1,42 @@
 import { Router } from "express";
 import { handleInputErrors } from "./modules/middleware";
-
+import {
+  getAppointments,
+  getAppointmentById,
+  createAppointment,
+  updateAppointment,
+  deleteAppointment,
+} from "./handlers/appointments";
+import {
+  deleteBarber,
+  getBarberById,
+  getBarbers,
+  loginBarber,
+  logoutBarber,
+  signUpBarber,
+  updateBarber,
+} from "./handlers/barber";
 const router = Router();
 
 /**
  * @route all the routes for the appointment
  */
-router.get("/appointments", (req, res) => {
-  res.status(200);
-  res.json({ message: req.requestTime });
-});
-router.get("/appointments/:id", handleInputErrors, () => {});
-router.post("/appointments", () => {});
-router.put("/appointments/:id", () => {});
-router.delete("/appointments/:id", () => {});
+router.get("/appointments", getAppointments);
+router.get("/appointments/:id", handleInputErrors, getAppointmentById);
+router.post("/appointments", createAppointment);
+router.put("/appointments/:id", updateAppointment);
+router.delete("/appointments/:id", deleteAppointment);
 
 /**
  * @route all the routes for the barber
  */
-router.post("/barbers/signup", (req, res) => {});
-router.post("/barbers/login", (req, res) => {});
-router.post("/barbers/logout", (req, res) => {});
-router.get("/barbers", (req, res) => {});
-router.get("/barbers/:id", (req, res) => {});
-router.put("/barbers/:id", (req, res) => {});
-router.delete("/barbers/:id", (req, res) => {});
+router.post("/barbers/signup", signUpBarber, loginBarber, (req, res) => {});
+router.post("/barbers/login", loginBarber);
+router.post("/barbers/logout", logoutBarber);
+router.get("/barbers", getBarbers);
+router.get("/barbers/:id", getBarberById);
+router.put("/barbers/:id", updateBarber);
+router.delete("/barbers/:id", deleteBarber);
 
 /**
  * @route all the routes for the client
